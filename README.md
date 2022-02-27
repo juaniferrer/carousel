@@ -5,7 +5,6 @@ Carousel app powered by React Native.
 ## Installation
 
 ```sh
-git clone https://github.com/juaniferrer/carousel.git
 cd carouselApp
 yarn install
 ```

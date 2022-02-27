@@ -23,26 +23,15 @@ const Carousel = () => {
   const [currentBlockBundle, setCurrentBlockBundle] = useState(0);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [shouldScroll, setShouldScroll] = useState(null);
-  const [buttonPressed, setButtonPressed] = useState(null);
   const {height, width} = Dimensions.get('screen');
   const viewConfigRef = useRef({
     waitForInteraction: true,
     itemVisiblePercentThreshold: 50,
   });
   const onViewRef = useRef(({viewableItems}) => {
-    console.log('viewableItems', viewableItems);
     if (viewableItems?.length > 0) {
-      setPhotoIndex(
-        viewableItems[buttonPressed === NEXT ? viewableItems?.length - 1 : 0]
-          .index,
-      );
+      setPhotoIndex(viewableItems[0].index);
     }
-    /* if (viewableItems[0]) {
-      setPhotoIndex(
-        viewableItems[buttonPressed === NEXT ? viewableItems?.length - 1 : 0]
-          .index,
-      );
-    } */
   });
 
   useEffect(() => {
@@ -51,17 +40,13 @@ const Carousel = () => {
 
   useEffect(() => {
     if (shouldScroll) {
-      const newOffset = shouldScroll === NEXT ? 0 : 3 * width - 40;
-      /*  setPhotoIndex(() => {
+      const newIndx = shouldScroll === NEXT ? 0 : MAX_BLOCKS - 1;
+      setPhotoIndex(() => {
         flatList.current.scrollToIndex({
           index: newIndx,
           animated: false,
         });
         return newIndx;
-      }); */
-      flatList.current.scrollToOffset({
-        offset: newOffset,
-        animated: false,
       });
       setShouldScroll(null);
     }
@@ -88,9 +73,12 @@ const Carousel = () => {
         return state - 1;
       });
     } else {
-      flatList.current.scrollToOffset({
-        offset: (photoIndex - 1) * width - 40,
-        animated: true,
+      setPhotoIndex(state => {
+        flatList.current.scrollToIndex({
+          index: state - 1,
+          animated: true,
+        });
+        return state - 1;
       });
     }
   };
@@ -105,9 +93,12 @@ const Carousel = () => {
         return state + 1;
       });
     } else {
-      flatList.current.scrollToOffset({
-        offset: (photoIndex + 1) * width - 40,
-        animated: true,
+      setPhotoIndex(state => {
+        flatList.current.scrollToIndex({
+          index: state + 1,
+          animated: true,
+        });
+        return state + 1;
       });
     }
   };
